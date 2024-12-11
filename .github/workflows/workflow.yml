@@ -185,16 +185,27 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
 
-  notification_job:
-    runs-on: ubuntu-latest
-    needs: [linter_job, cypress_job, add_badge_job, deploy_job]
-    steps:
-      - name: Send email notification
-        uses: ./send-notification-action # Replace with the path to your custom action
-        with:
-          to_email: ${{ secrets.USER_EMAIL }}
-          subject: "Workflow Execution Result"
-          linter_result: ${{ job.status(linter_job) }}
-          cypress_result: ${{ job.status(cypress_job) }}
-          badge_result: ${{ job.status(add_badge_job) }}
-          deploy_result: ${{ job.status(deploy_job) }}
+notification_job:
+  runs-on: ubuntu-latest
+  needs: [linter_job, cypress_job, add_badge_job, deploy_job]
+  steps:
+    - name: Send email notification using SendGrid API
+      run: |
+        curl -X POST https://api.sendgrid.com/v3/mail/send \
+        -H "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "personalizations": [
+            {
+              "to": [{"email": "${{ secrets.USER_EMAIL }}"}],
+              "subject": "Workflow Execution Result"
+            }
+          ],
+          "from": {"email": "your-email@example.com"},
+          "content": [
+            {
+              "type": "text/plain",
+              "value": "El estado de los trabajos es el siguiente:\n\nLinter: ${{ needs.linter_job.result }}\nCypress: ${{ needs.cypress_job.result }}\nBadge: ${{ needs.add_badge_job.result }}\nDeploy: ${{ needs.deploy_job.result }}"
+            }
+          ]
+        }'
