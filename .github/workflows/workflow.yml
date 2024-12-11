@@ -186,10 +186,15 @@ jobs:
       id: set-outcome
       run: echo "::set-output name=cypress_outcome::$(cat result.txt)"
     
-    - name: Update README with badge
-      uses: ./update-readme-action  # Asegúrate de que esta carpeta contenga un archivo action.yml o action.yaml
-      with:
-        outcome: ${{ steps.set-outcome.outputs.cypress_outcome }}
+    name: Update README with badge
+        run: |
+          OUTCOME=$(cat result.txt)
+          if [ "$OUTCOME" == "success" ]; then
+            BADGE="![Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)"
+          else
+            BADGE="![Failure](https://img.shields.io/badge/test-failure-red)"
+          fi
+          echo "\nRESULTAT DELS ÚLTIMS TESTS\n$BADGE" >> README.md
     
     - name: Commit and push changes
       run: |
@@ -199,15 +204,18 @@ jobs:
         git commit -m "Update README with Cypress test result badge"
         git push
 
-  deploy_job:
-    runs-on: ubuntu-latest
-    needs: cypress_job
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+deploy_job:
+  needs: cypress_job
+  runs-on: ubuntu-latest
+  steps: #step 1
+  - name: Checkout code
+     uses: actions/checkout@v4 #step 2
+  - name: Desplegar en Vercel
+    uses: amondnet/vercel-action@v25
+    with:
+      vercel-token: ${{ secrets.VERCEL_TOKEN }} 
+       # github-token: ${{ secrets.GH_TOKEN }} 
+      vercel-args: "--prod" #Optional
+      vercel-org-id: ${{ secrets.ORG_ID}} 
+      vercel-project-id: ${{ secrets.PROJECT_ID}} 
+      # working-directory: ../../
