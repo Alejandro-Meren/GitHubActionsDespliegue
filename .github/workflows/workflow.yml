@@ -100,7 +100,6 @@ jobs:
         vercel-args: "--prod --yes --name githubactionsdespliegue"
 
 
-
   notification_job:
    needs: [linter_job, cypress_job, add_badge_job, deploy_job]
    runs-on: ubuntu-latest
