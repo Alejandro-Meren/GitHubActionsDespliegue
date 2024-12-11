@@ -111,31 +111,35 @@
 #       run: |
 #         echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
 
-name: nom_repositori_workflow
+name: Lint and Test Workflow
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   linter_job:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
     
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'  # Asegúrate de usar la versión de Node.js que necesitas
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Asegúrate de usar la versión de Node.js que necesitas
     
-    - name: Install dependencies
-      run: npm install  # Instala las dependencias necesarias
+      - name: Install dependencies
+        run: npm install  # Instala las dependencias necesarias
     
-    - name: Run linter
-      run: npm run lint  # Ejecuta el linter
-      
+      - name: Run linter
+        run: npm run lint  # Ejecuta el linter
+
+
   cypress_job:
     runs-on: ubuntu-latest
     needs: linter_job
