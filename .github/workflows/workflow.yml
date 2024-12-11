@@ -216,12 +216,6 @@ jobs:
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: "--prod"  # O puedes probar sin este argumento
+          vercel-args: "--prod --confirm"  # Agregar --confirm para evitar la solicitud interactiva
           vercel-org-id: ${{ secrets.ORG_ID }}
           vercel-project-id: ${{ secrets.PROJECT_ID }}
-
-      - name: Check deployment logs
-        run: |
-          echo "Revisando el despliegue"
-          npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --confirm
-
