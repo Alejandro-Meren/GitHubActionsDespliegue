@@ -65,6 +65,12 @@ jobs:
           fi
           echo "\nRESULTAT DELS ÚLTIMS TESTS\n$BADGE" >> README.md
 
+ - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/Alejandro-Meren/GitHubActionsDespliegue.git
+
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
@@ -73,18 +79,12 @@ jobs:
           git commit -m "Update README with test results badge"
           git push
 
-  deploy_job:
-    needs: cypress_job
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+ - name: Deploy to Vercel
+  uses: amondnet/vercel-action@v20
+  with:
+    vercel-token: ${{ secrets.VERCEL_TOKEN }}
+    vercel-args: "--prod --yes --name githubactionsdespliegue"
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: Bw08urjkULZ7EFjM5E0oMGlb 
-          vercel-args: "--prod --yes"
 
   notification_job:
     needs: [linter_job, cypress_job, add_badge_job, deploy_job]
