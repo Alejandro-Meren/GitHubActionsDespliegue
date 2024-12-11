@@ -187,14 +187,14 @@ jobs:
       run: echo "::set-output name=cypress_outcome::$(cat result.txt)"
     
     name: Update README with badge
-        run: |
-          OUTCOME=$(cat result.txt)
-          if [ "$OUTCOME" == "success" ]; then
-            BADGE="![Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)"
-          else
-            BADGE="![Failure](https://img.shields.io/badge/test-failure-red)"
-          fi
-          echo "\nRESULTAT DELS ÚLTIMS TESTS\n$BADGE" >> README.md
+    run: |
+       OUTCOME=$(cat result.txt)
+      if [ "$OUTCOME" == "success" ]; then
+       BADGE="![Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)"
+      else
+       BADGE="![Failure](https://img.shields.io/badge/test-failure-red)"
+      fi
+      echo "\nRESULTAT DELS ÚLTIMS TESTS\n$BADGE" >> README.md
     
     - name: Commit and push changes
       run: |
