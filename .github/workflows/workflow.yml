@@ -111,6 +111,9 @@
 #       run: |
 #         echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
 
+permissions:
+   contents: write
+
 name: Lint and Test Workflow
 
 on:
@@ -213,6 +216,7 @@ jobs:
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: "--prod --yes --githubactionsdespliegue"  # Opcional
+          vercel-args: "--prod --githubactionsdespliegue"  # Eliminar --yes
           vercel-org-id: ${{ secrets.ORG_ID }}
           vercel-project-id: ${{ secrets.PROJECT_ID }}
+
