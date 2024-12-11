@@ -86,11 +86,11 @@ jobs:
           git commit -m "Update README with test results badge"
           git push
 
-deploy_job:
-  needs: add_badge_job
-  runs-on: ubuntu-latest
-  steps:
-    - name: Deploy to Vercel
+  deploy_job:
+   needs: add_badge_job
+    runs-on: ubuntu-latest
+    steps:
+     - name: Deploy to Vercel
       uses: amondnet/vercel-action@v20
       with:
         vercel-token: ${{ secrets.GitHub_Actions }}
