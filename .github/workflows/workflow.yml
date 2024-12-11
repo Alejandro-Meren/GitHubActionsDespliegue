@@ -216,7 +216,7 @@ jobs:
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: "--prod --githubactionsdespliegue"  # Eliminar --yes
+          vercel-args: "--prod"  # Eliminar --yes
           vercel-org-id: ${{ secrets.ORG_ID }}
           vercel-project-id: ${{ secrets.PROJECT_ID }}
 
