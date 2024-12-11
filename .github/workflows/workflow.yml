@@ -84,7 +84,7 @@ jobs:
         uses: amondnet/vercel-action@v20
         with:
           vercel-token: Bw08urjkULZ7EFjM5E0oMGlb 
-          vercel-args: "--prod"
+          vercel-args: "--prod --yes"
 
   notification_job:
     needs: [linter_job, cypress_job, add_badge_job, deploy_job]
