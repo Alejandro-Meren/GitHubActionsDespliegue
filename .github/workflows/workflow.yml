@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  # Si también deseas ejecutarlo en pull requests, puedes agregar esta sección
+  pull_request:
+    branches:
+      - main
 
 jobs:
   linter_job:
@@ -28,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Tests Cypress
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
           start: npm start
@@ -37,7 +41,7 @@ jobs:
       - name: Save Cypress results
         run: echo "success" > result.txt
 
-      - name: Upload artifact
+      - name: Upload Cypress results as artifact
         uses: actions/upload-artifact@v3
         with:
           name: cypress-results
@@ -50,7 +54,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download artifact
+      - name: Download Cypress results artifact
         uses: actions/download-artifact@v3
         with:
           name: cypress-results
@@ -79,12 +83,15 @@ jobs:
           git commit -m "Update README with test results badge"
           git push
 
- - name: Deploy to Vercel
-  uses: amondnet/vercel-action@v20
-  with:
-    vercel-token: ${{ secrets.VERCEL_TOKEN }}
-    vercel-args: "--prod --yes --name githubactionsdespliegue"
-
+  deploy_job:
+    needs: add_badge_job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: "--prod --yes --name githubactionsdespliegue"
 
   notification_job:
     needs: [linter_job, cypress_job, add_badge_job, deploy_job]
@@ -93,4 +100,3 @@ jobs:
       - name: Send Notification Email
         run: |
           echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
-
