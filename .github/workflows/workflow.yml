@@ -100,10 +100,13 @@ jobs:
         vercel-args: "--prod --yes --name githubactionsdespliegue"
 
 
-  notification_job:
-    needs: [linter_job, cypress_job, add_badge_job, deploy_job]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Notification Email
-        run: |
-          echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
+notification_job:
+  needs: [linter_job, cypress_job, add_badge_job, deploy_job]
+  runs-on: ubuntu-latest
+  steps:
+    - name: Install mail utilities
+      run: sudo apt-get install -y mailutils
+
+    - name: Send Notification Email
+      run: |
+        echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
