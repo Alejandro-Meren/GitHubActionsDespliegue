@@ -100,10 +100,10 @@ jobs:
         vercel-args: "--prod --yes --name githubactionsdespliegue"
 
 
-notification_job:
-  needs: [linter_job, cypress_job, add_badge_job, deploy_job]
-  runs-on: ubuntu-latest
-  steps:
+  notification_job:
+   needs: [linter_job, cypress_job, add_badge_job, deploy_job]
+   runs-on: ubuntu-latest
+   steps:
     - name: Install mail utilities
       run: sudo apt-get install -y mailutils
 
