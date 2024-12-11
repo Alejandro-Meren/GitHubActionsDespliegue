@@ -1,4 +1,7 @@
-name: nom_repositori_workflow
+permissions:
+  contents: write
+  
+name: workflow
 
 on:
   push:
