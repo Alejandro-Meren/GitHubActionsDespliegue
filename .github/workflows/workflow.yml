@@ -205,18 +205,23 @@ jobs:
           git commit -m "Update README with Cypress test result badge"
           git push
 
-  deploy_job:
-    needs: cypress_job
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+deploy_job:
+  needs: cypress_job
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Desplegar en Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: "--prod"  # Eliminar --yes
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
+    - name: Desplegar en Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-args: "--prod"  # O puedes probar sin este argumento
+        vercel-org-id: ${{ secrets.ORG_ID }}
+        vercel-project-id: ${{ secrets.PROJECT_ID }}
+
+    - name: Check deployment logs
+      run: |
+        echo "Revisando el despliegue"
+        npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --confirm
 
