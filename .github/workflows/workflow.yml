@@ -97,7 +97,7 @@ jobs:
       uses: amondnet/vercel-action@v20
       with:
         vercel-token:  Mjk2kHF8URArFf8RkSrkgon4
-        vercel-args: "--prod --yes"
+        vercel-args: "--prod --yes --name githubactionsdespliegue"
 
 
   notification_job:
