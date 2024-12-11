@@ -1,13 +1,9 @@
-permissions:
-  contents: write
-
 name: workflow
 
 on:
   push:
     branches:
       - main
-  # Si también deseas ejecutarlo en pull requests, puedes agregar esta sección
   pull_request:
     branches:
       - main
@@ -39,7 +35,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npm start
-        continue-on-error: true
 
       - name: Save Cypress results
         run: echo "success" > result.txt
@@ -72,41 +67,34 @@ jobs:
           fi
           echo "\nRESULTAT DELS ÚLTIMS TESTS\n$BADGE" >> README.md
 
-      - name: Set up Git
+      - name: Commit changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Alejandro-Meren/GitHubActionsDespliegue.git
-
-      - name: Commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "alemeco2005@gmail.com"
           git add README.md
           git commit -m "Update README with test results badge"
           git push
 
   deploy_job:
-   needs: add_badge_job
-   runs-on: ubuntu-latest
-   steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    needs: add_badge_job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v20
-      with:
-        vercel-token:  Mjk2kHF8URArFf8RkSrkgon4
-        vercel-args: "--prod --yes --name githubactionsdespliegue"
-
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: "--prod --yes --name githubactionsdespliegue"
 
   notification_job:
-   needs: [linter_job, cypress_job, add_badge_job, deploy_job]
-   runs-on: ubuntu-latest
-   steps:
-    - name: Install mail utilities
-      run: sudo apt-get install -y mailutils
+    needs: [linter_job, cypress_job, add_badge_job, deploy_job]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install mail utilities
+        run: sudo apt-get install -y mailutils
 
-    - name: Send Notification Email
-      run: |
-        echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
+      - name: Send Notification Email
+        run: |
+          echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
