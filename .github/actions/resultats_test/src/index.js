@@ -36,4 +36,3 @@ run().catch(error => {
   core.setFailed(error.message);
 });
 
-run();
