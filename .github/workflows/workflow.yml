@@ -79,8 +79,8 @@ jobs:
       - name: Commit and Push Changes to README
         uses: EndBug/add-and-commit@v9
         with:
-          author_name: "GitHub Actions"
-          author_email: "actions@github.com"
+          author_name: "Alejandro"
+          author_email: "alemeco2005@gmail.com"
           message: "Afegir badge de Cypress"
           add: "README.md"
 
