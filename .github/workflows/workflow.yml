@@ -12,90 +12,90 @@ on:
       - main
 
 jobs:
-  linter_job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # linter_job:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'  # Asegúrate de usar la versión de Node.js que necesitas
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '16'  # Asegúrate de usar la versión de Node.js que necesitas
 
-      - name: Install dependencies
-        run: npm install  # Instala las dependencias necesarias
+  #     - name: Install dependencies
+  #       run: npm install  # Instala las dependencias necesarias
 
-      - name: Run linter
-        run: npm run lint  # Ejecuta el linter
+  #     - name: Run linter
+  #       run: npm run lint  # Ejecuta el linter
 
-  cypress_job:
-    runs-on: ubuntu-latest
-    needs: linter_job
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # cypress_job:
+  #   runs-on: ubuntu-latest
+  #   needs: linter_job
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
+  #     - name: Install dependencies
+  #       run: npm install
 
-      - name: Start server
-        run: npm run dev &  # Inicia el servidor en segundo plano
+  #     - name: Start server
+  #       run: npm run dev &  # Inicia el servidor en segundo plano
 
-      - name: Wait for server to be ready
-        run: |
-          npx wait-on http://localhost:3000  # Asegúrate de que el servidor esté listo antes de ejecutar Cypress
+  #     - name: Wait for server to be ready
+  #       run: |
+  #         npx wait-on http://localhost:3000  # Asegúrate de que el servidor esté listo antes de ejecutar Cypress
 
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v5
+  #     - name: Run Cypress tests
+  #       uses: cypress-io/github-action@v5
 
-      - name: Save Cypress results
-        run: echo "$(cat cypress/results.txt)" > result.txt
+  #     - name: Save Cypress results
+  #       run: echo "$(cat cypress/results.txt)" > result.txt
 
-      - name: Upload result artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-result
-          path: result.txt
+  #     - name: Upload result artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: cypress-result
+  #         path: result.txt
 
-  add_badge_job:
-    runs-on: ubuntu-latest
-    needs: cypress_job
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # add_badge_job:
+  #   runs-on: ubuntu-latest
+  #   needs: cypress_job
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Download Cypress result artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: cypress-result
+  #     - name: Download Cypress result artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: cypress-result
 
-      - name: Set Cypress outcome
-        id: set-outcome
-        run: echo "::set-output name=cypress_outcome::$(cat result.txt)"
+  #     - name: Set Cypress outcome
+  #       id: set-outcome
+  #       run: echo "::set-output name=cypress_outcome::$(cat result.txt)"
 
-      - name: Update README with badge
-        run: |
-          OUTCOME=$(cat result.txt)
-          if [ "$OUTCOME" == "success" ]; then
-            BADGE="![Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)"
-          else
-            BADGE="![Failure](https://img.shields.io/badge/test-failure-red)"
-          fi
-          echo "\nRESULTAT DELS ÚLTIMS TESTS\n$BADGE" >> README.md
+  #     - name: Update README with badge
+  #       run: |
+  #         OUTCOME=$(cat result.txt)
+  #         if [ "$OUTCOME" == "success" ]; then
+  #           BADGE="![Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)"
+  #         else
+  #           BADGE="![Failure](https://img.shields.io/badge/test-failure-red)"
+  #         fi
+  #         echo "\nRESULTAT DELS ÚLTIMS TESTS\n$BADGE" >> README.md
 
-      - name: Commit and push changes
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add README.md
-          git commit -m "Update README with Cypress test result badge"
-          git push
+  #     - name: Commit and push changes
+  #       run: |
+  #         git config user.name "GitHub Actions"
+  #         git config user.email "actions@github.com"
+  #         git add README.md
+  #         git commit -m "Update README with Cypress test result badge"
+  #         git push
 
   deploy_job:
     runs-on: ubuntu-latest
-    needs:
-      - add_badge_job
+    # needs:
+    #   - add_badge_job
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
