@@ -72,7 +72,7 @@ jobs:
         run: echo "::set-output name=cypress_outcome::$(cat ./artifacts/result.txt)"
 
       - name: Add Badge to README
-        uses: ./.github/actions/memes
+        uses: ./.github/actions/resultats.test
         with:
           cypress_outcome: ${{ steps.set-output.outputs.cypress_outcome }}
 
