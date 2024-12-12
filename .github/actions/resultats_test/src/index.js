@@ -13,13 +13,26 @@ async function run() {
   // Comprobar si el archivo OldREADME.md existe
   if (!fs.existsSync(oldReadmePath)) {
     // Si no existe, crear una copia de seguridad del README.md
-    fs.copyFileSync(readmePath, oldReadmePath);
-    core.info('Copia de seguridad del README.md creada como OldREADME.md');
+    try {
+      fs.copyFileSync(readmePath, oldReadmePath);
+      core.info('Copia de seguridad del README.md creada como OldREADME.md');
+    } catch (err) {
+      core.setFailed(`Error al crear la copia de seguridad: ${err.message}`);
+      return;
+    }
   }
 
   // Leer el README original y la copia de seguridad
-  let readmeContent = fs.readFileSync(readmePath, 'utf8');
-  const oldReadmeContent = fs.readFileSync(oldReadmePath, 'utf8');
+  let readmeContent;
+  let oldReadmeContent;
+  
+  try {
+    readmeContent = fs.readFileSync(readmePath, 'utf8');
+    oldReadmeContent = fs.readFileSync(oldReadmePath, 'utf8');
+  } catch (err) {
+    core.setFailed(`Error al leer los archivos: ${err.message}`);
+    return;
+  }
 
   // Comprobar si el texto "RESULTAT DELS ÚLTIMS TESTS" existe
   const resultText = 'RESULTAT DELS ÚLTIMS TESTS';
