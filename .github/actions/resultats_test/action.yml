@@ -1,4 +1,4 @@
-name: 'Add Badge to README'
+name: 'resultats-test'
 description: 'Afegir un badge al README segons el resultat dels tests de Cypress'
 inputs:
   cypress_outcome:
