@@ -1,9 +1,6 @@
 {
-  "name": "githubactionsdespliegue",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/node"
-    }
-  ]
+  "version": 2,
+  "github": {
+    "enabled": false
+  }
 }
