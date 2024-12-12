@@ -9,7 +9,6 @@ async function run() {
     : 'https://img.shields.io/badge/test-failure-red';
 
   const readmePath = './README.md';
-  const oldReadmePath = './OldREADME.md'; // Copia de seguridad del README
 
   // Imprimir el contenido del README para comprobar que se lee correctamente
   let readmeContent;
