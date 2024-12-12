@@ -1,41 +1,48 @@
+const fs = require('fs');
 const core = require('@actions/core');
-const fs = require('fs').promises;
 
-async function main() {
-    try {        
-        console.log('Starting the script...');
-        console.log('Mostrem el directori actual de treball:', process.cwd());
+async function run() {
+  // Obtener el resultado de Cypress desde los inputs
+  const cypressOutcome = core.getInput('cypress_outcome');
+  const badgeUrl = cypressOutcome === 'success'
+    ? 'https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg'
+    : 'https://img.shields.io/badge/test-failure-red';
 
-        //Obtinguem el resultat del test.
-        const resultat_test = core.getInput('test_result');
-        //Guardem l´insignia de error en cas de que el test falle.
-        const img_error = 'https://img.shields.io/badge/test-failure-red';
-        //Guardem l´insignia del test en cas de que el test resulte exitós.
-        const img_exit = 'https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg';
-        //Guardem l´insignia que mostrarem al readme depenent del resultat del test.
-        const badge = resultat_test === 'success' ? img_exit : img_error;
-        //Guardem el missatge que afegirem abans del l´insignia al readme.
-        const missatge_badge = `RESULTAT DELS ÚLTIMS TESTS \n ![Test result badge](${badge})`;
+  const readmePath = './README.md';
+  const oldReadmePath = './OldREADME.md'; // Copia de seguridad del README
 
-        const oldReadmePath = './OldREADME.md';
-        let oldReadmeContent = await fs.readFile(oldReadmePath, 'utf-8');
-        let newReadmeContent = oldReadmeContent + "\n" + missatge_badge;
-        const readmePath = './README.md';
-        await fs.writeFile(readmePath, newReadmeContent);
+  // Imprimir el contenido del README para comprobar que se lee correctamente
+  let readmeContent;
+  try {
+    readmeContent = fs.readFileSync(readmePath, 'utf8');
+    core.info('Contenido del README.md:\n' + readmeContent); // Depuración
+  } catch (err) {
+    core.setFailed(`Error al leer el archivo README.md: ${err.message}`);
+    return;
+  }
 
-        // console.log(`Attempting to read: ${oldReadmePath}`);
-        // console.log('Successfully read OldREADME.md');
-        // console.log(`Old README content:\n${oldReadmeContent}`);
-        // console.log(`New README content:\n${newReadmeContent}`);
-        // console.log(`Attempting to write to: ${readmePath}`);
-        // console.log('Successfully wrote to README.md');
+  // Comprobar si el texto "RESULTAT DELS ÚLTIMS TESTS" existe en el README
+  const resultText = 'RESULTAT DELS ÚLTIMS TESTS'; // Puedes modificar esto si el texto cambia
+  const index = readmeContent.indexOf(resultText);
 
-        process.exit(0);
-    } catch (e) {
-        console.error(e);
-        core.setFailed(e.message);
+  if (index !== -1) {
+    // Si se encuentra la sección, insertar el badge
+    const newReadmeContent = readmeContent.slice(0, index + resultText.length) +
+      `\n![Test Badge](${badgeUrl})\n` +
+      readmeContent.slice(index + resultText.length);
+
+    // Escribir los cambios en README.md
+    try {
+      fs.writeFileSync(readmePath, newReadmeContent, 'utf8');
+      core.info('Badge añadido al README.md');
+    } catch (err) {
+      core.setFailed(`Error al escribir en el archivo README.md: ${err.message}`);
     }
+  } else {
+    core.setFailed('No se ha encontrado la sección "RESULTAT DELS ÚLTIMS TESTS" en README.md');
+  }
+}
 
-};
-
-main();
+run().catch(error => {
+  core.setFailed(error.message);
+});
