@@ -10,29 +10,35 @@ async function run() {
   const readmePath = './README.md';
   const oldReadmePath = './OldREADME.md'; // Copia de seguretat del README
 
-  // Llegir el README original i la seva còpia de seguretat
+  // Comprobar si el archivo OldREADME.md existe
+  if (!fs.existsSync(oldReadmePath)) {
+    // Si no existe, crear una copia de seguridad del README.md
+    fs.copyFileSync(readmePath, oldReadmePath);
+    core.info('Copia de seguridad del README.md creada como OldREADME.md');
+  }
+
+  // Leer el README original y la copia de seguridad
   let readmeContent = fs.readFileSync(readmePath, 'utf8');
   const oldReadmeContent = fs.readFileSync(oldReadmePath, 'utf8');
 
-  // Comprovar si el text "RESULTAT DELS ÚLTIMS TESTS" existeix
+  // Comprobar si el texto "RESULTAT DELS ÚLTIMS TESTS" existe
   const resultText = 'RESULTAT DELS ÚLTIMS TESTS';
   const index = readmeContent.indexOf(resultText);
 
   if (index !== -1) {
-    // Substituir la secció de RESULTAT DELS ÚLTIMS TESTS amb el badge
+    // Sustituir la sección de RESULTAT DELS ÚLTIMS TESTS con el badge
     const newReadmeContent = readmeContent.slice(0, index + resultText.length) +
       `\n![Test Badge](${badgeUrl})\n` +
       readmeContent.slice(index + resultText.length);
 
-    // Escriure els canvis al README.md
+    // Escribir los cambios en README.md
     fs.writeFileSync(readmePath, newReadmeContent, 'utf8');
-    core.info('Badge afegit al README.md');
+    core.info('Badge añadido al README.md');
   } else {
-    core.setFailed('No s\'ha trobat la secció "RESULTAT DELS ÚLTIMS TESTS" al README.md');
+    core.setFailed('No se ha encontrado la sección "RESULTAT DELS ÚLTIMS TESTS" en README.md');
   }
 }
 
 run().catch(error => {
   core.setFailed(error.message);
 });
-
