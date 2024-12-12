@@ -1,0 +1,9 @@
+name: 'Add Badge to README'
+description: 'Afegir un badge al README segons el resultat dels tests de Cypress'
+inputs:
+  cypress_outcome:
+    description: 'Resultat dels tests de Cypress (success o failure)'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
