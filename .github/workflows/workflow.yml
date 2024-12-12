@@ -61,6 +61,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Crear OldREADME.md si no existe
+        run: |
+          if [ ! -f OldREADME.md ]; then
+            cp README.md OldREADME.md
+          fi
+
       - name: Retrieve Cypress Test Artifacts
         uses: actions/download-artifact@v3
         with:
