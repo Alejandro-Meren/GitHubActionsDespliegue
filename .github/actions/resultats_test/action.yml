@@ -1,4 +1,4 @@
-name: 'resultats-test'
+name: 'Custom action'
 description: 'Afegir un badge al README segons el resultat dels tests de Cypress'
 inputs:
   cypress_outcome:
