@@ -20,7 +20,7 @@ console.log(badge);
 fs.readFile(readmePath, 'utf8', function (err, data) {
     console.log("Entro funcion");
     if (err) throw err;
-    let README = data.search(img_exit) !== -1 ? data.replace(img_exit, badge) : date.replace(img_error, badge);
+    let README = data.search(img_exit) !== -1 ? data.replace(img_exit, badge) : data.replace(img_error, badge);
     fs.writeFile(readmePath, README, function (err) {
         if (err) throw err;
         console.log("Bagde añadido correctamente");
