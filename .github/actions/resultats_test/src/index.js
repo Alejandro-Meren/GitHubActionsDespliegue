@@ -27,6 +27,8 @@ async function main() {
 
         const badge = resultats_test == 'success' ? img_exit : img_error;
 
+        console.log(resultats_test);
+        console.log(badge);
         fs.readFile(readmePath, 'utf8', function (err, data) {
             if (err) throw err;
             let README = data.search(img_exit) !== -1 ? data.replace(img_exit, badge) : date.replace(img_error, badge);
