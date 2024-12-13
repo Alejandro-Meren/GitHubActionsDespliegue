@@ -1,4 +1,4 @@
-const TelegramBot = require('node-teelgram-bot-api')
+const TelegramBot = require('node-telegram-bot-api');
 const core = require ('@actions/core')
 
 const token = core.getInput("telegram_token")
