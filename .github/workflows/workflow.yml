@@ -51,7 +51,7 @@ jobs:
       - name: Upload Cypress results artifact
         uses: actions/upload-artifact@v3
         with:
-          name: cypress-test-results
+          name: resultats_test
           path: result.txt
 
   add_badge_job:
@@ -64,7 +64,7 @@ jobs:
       - name: Retrieve Cypress Test Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: cypress-test-results
+          name: resultats_test
           path: ./artifacts
 
       - name: Generate Output from Cypress Result
