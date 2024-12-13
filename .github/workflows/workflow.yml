@@ -116,4 +116,4 @@ jobs:
       - uses: ./.github/actions/send_telegram
         with:
           telegram-token: ${{secrets.TELEGRAM_TOKEN}}
-          telegram-id-user: ${{secrets.TELEGRAM_ID_TOKEN}}
+          telegram-id-user: ${{secrets.TELEGRAM_ID_USER}}
