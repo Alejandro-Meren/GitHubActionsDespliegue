@@ -2,22 +2,11 @@ const core = require('@actions/core');
 const fs = require('fs').promises;
 const path = require('path');
 
-async function main() {
+function main() {
     try {        
         console.log('Starting the script...');
         console.log('Mostrem el directori actual de treball:', process.cwd());
 
-        // //Obtinguem el resultat del test.
-        // const resultat_test = core.getInput('test_result');
-        // //Guardem l´insignia de error en cas de que el test falle.
-       
-        // //Guardem l´insignia que mostrarem al readme depenent del resultat del test.
-        // //Guardem el missatge que afegirem abans del l´insignia al readme.
-        // const missatge_badge = `RESULTAT DELS ÚLTIMS TESTS \n ![Test result badge](${badge})`;
-
-        // const oldReadmePath = './OldREADME.md';
-        // let oldReadmeContent = await fs.readFile(oldReadmePath, 'utf-8');
-        // let newReadmeContent = oldReadmeContent + "\n" + missatge_badge;
         const readmePath = path.resolve('./README.md');
         const resultats_test = core.getInput('resultats_test');
 
