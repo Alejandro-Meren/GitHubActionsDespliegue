@@ -1,0 +1,17 @@
+name: telegram-action
+description: "Envia un mensaje de confirmacion"
+inputs:
+  telegram_token:
+    description: "Token de usuario"
+    required: true
+  telegram_id_user:
+    description: "Id del usuario de Telegram"
+    required: true
+outputs:
+  msg:
+    description: "Mensaje de respuesta"
+runs:
+  using: "node20"
+  main: "dist/index.js"
+
+  

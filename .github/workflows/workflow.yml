@@ -108,12 +108,11 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: npx vercel --prod --token=$VERCEL_TOKEN --yes
 
-  notification_job:
-    needs: [deploy_job]
+  send_message_job:
     runs-on: ubuntu-latest
     steps:
-      - name: Install mail utilities
-        run: sudo apt-get install -y mailutils
-
-      - name: Send Notification Email
-        run: echo "S'ha realitzat un push en la branca main..." | mail -s "Resultat del Workflow" ${{ secrets.EMAIL_SECRET }}
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions
+        with:
+          telegram_token: ${{secrets.TELEGRAM_TOKEN}}
+          telegram_id_user: ${{secrets.TELEGRAM_ID_TOKEN}}
