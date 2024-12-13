@@ -1,9 +1,9 @@
-name: 'Custom action'
-description: 'Afegir un badge al README segons el resultat dels tests de Cypress'
+name: resultats_test
+description: "Afegim un badge al readme.md amb el resultat del test"
 inputs:
-  cypress_outcome:
-    description: 'Resultat dels tests de Cypress (success o failure)'
+  resultats_test:
+    description: "Test result"
     required: true
 runs:
-  using: 'node12'
-  main: 'src/dist/index.js'
+  using: "node12"
+  main: src/dist/index.js
