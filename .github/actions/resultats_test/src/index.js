@@ -11,11 +11,12 @@ const resultats_test = core.getInput('resultats_test');
 
 const img_error = 'https://img.shields.io/badge/test-failure-red';
 const img_exit = 'https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg';
-
+console.log(readmePath);
 var badge = resultats_test == "success" ? img_exit : img_error;
 
 console.log(resultats_test);
 console.log(badge);
+
 fs.readFile(readmePath, 'utf8', function (err, data) {
     console.log("Entro funcion");
     if (err) throw err;
