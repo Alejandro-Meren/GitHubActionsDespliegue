@@ -28,67 +28,54 @@ jobs:
 
   cypress_job:
     runs-on: ubuntu-latest
-    needs: linter_job
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: npm install
+      - name: Instalar dependencias
+        run: |
+          npm install
+          npm run build
 
-      - name: Start server
-        run: npm run dev &
+      - name: Ejecutar tests de Cypress
+        run: |
+          npx cypress run --record
 
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000
-
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v5
-
-      - name: Save Cypress results
-        run: echo "$(cat cypress/results.txt)" > result.txt
-
-      - name: Upload Cypress results artifact
-        uses: actions/upload-artifact@v3
+      - name: Subir artefacto con el resultado del test
+        uses: actions/upload-artifact@v2
         with:
-          name: resultats_test
-          path: result.txt
+          name: result.txt
+          path: ./result.txt
 
   add_badge_job:
-    needs: cypress_job
     runs-on: ubuntu-latest
-              
-    steps:       
-    # Step 1
-    - name: Checkout code
-      uses: actions/checkout@v4
-              
-    # Step 2
-    - name: Recuperem lartefact
-      uses: actions/download-artifact@v4
-      with:
-        name: result.txt
-              
-              # Step 3
-    - name: Settegem l´ixida
-      run: echo "::set-output name=cypress_outcome::$(cat result.txt)"
-      id: cypress_outcome
-              
-              # Step 4
-    - name: Afegim el badge del resultat del test
-      uses: ./.github/actions/resultat_test_action
-      with:
-        resultats_test: ${{steps.cypress_outcome.outputs.cypress_outcome}}
-              
-              # Step 5
-    - name: Commit i push dels canvits
-      uses: EndBug/add-and-commit@v9
-      with:
-        add: .
-        author_name: "Kike Valero"
-        author_email: "kvalerosor@hotmail.com"
-        message: "Resultat test badge"
-        push: true    
+    needs: cypress_job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Recuperar artefacto
+        uses: actions/download-artifact@v4
+        with:
+          name: result.txt
+
+      - name: Settegem l´ixida
+        run: echo "::set-output name=cypress_outcome::$(cat result.txt)"
+        id: cypress_outcome
+
+      - name: Afegir el badge del resultat del test
+        uses: ./.github/actions/resultat_test_action
+        with:
+          resultats_test: ${{ steps.cypress_outcome.outputs.cypress_outcome }}
+
+      - name: Commit i push dels canvits
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: . 
+          author_name: "Kike Valero"
+          author_email: "kvalerosor@hotmail.com"
+          message: "Resultat test badge"
+          push: true
 
   deploy_job:
     runs-on: ubuntu-latest
