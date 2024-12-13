@@ -1,16 +1,23 @@
 const TelegramBot = require('node-telegram-bot-api');
-const core = require ('@actions/core')
+const core = require('@actions/core');
 
-const token = core.getInput("telegram_token")
-const chatID = core.getInput("teelgram_id_user")
+// Obtener los inputs desde el flujo de trabajo de GitHub Actions
+const token = core.getInput('telegram_token');
+const chatID = core.getInput('telegram_id_user');
 
-const bot = new TelegramBot(token, {polling: true});
+// Crear una instancia del bot de Telegram
+const bot = new TelegramBot(token, { polling: true });
 
 try {
-    const message = `WorkFlow ejecutado correctamente tras el ultimo commit. Saludos ${core.getInput("user_name")}`;
+  // Mensaje que será enviado al usuario de Telegram
+  const message = `Workflow ejecutado correctamente tras el último commit. Saludos, ${core.getInput('user_name')}`;
 
-    bot.sendMessage(chatID, message)
-    core.setOutput("msg", "Mensaje enviado correctamente")
+  // Enviar el mensaje al chat especificado
+  bot.sendMessage(chatID, message);
+
+  // Establecer la salida en GitHub Actions
+  core.setOutput('msg', 'Mensaje enviado correctamente');
 } catch (error) {
-    core.setFailed(error.message)
+  // Si ocurre un error, marcar el trabajo como fallido
+  core.setFailed(error.message);
 }
