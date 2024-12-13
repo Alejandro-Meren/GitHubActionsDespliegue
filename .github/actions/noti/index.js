@@ -13,5 +13,5 @@ try {
     core.setOutput("msg", "Mensaje enviado correctamente")
 } catch (error) {
     core.setFailed(error.message)
-    
+    //asd
 }
