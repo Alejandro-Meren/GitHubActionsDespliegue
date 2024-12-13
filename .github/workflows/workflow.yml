@@ -44,6 +44,7 @@ jobs:
           start: npm start
         continue-on-error: true
 
+        id: cypress
       - name: Save Cypress results
         run: echo ${{steps.cypress.outcome}} > result.txt
 
