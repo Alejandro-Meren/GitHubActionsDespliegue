@@ -1,10 +1,10 @@
 name: telegram-action
 description: "Envia un mensaje de comfirmacion del workflow del usuario"
 inputs:
-  telegram-token:
+  telegram_token:
     description: "Token usuario Telegram"
     required: true
-  telegram-id-user:
+  telegram_id_user:
     description: "Id del usuario de Telegram"
     required: true
 outputs:

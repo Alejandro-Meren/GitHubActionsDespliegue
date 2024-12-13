@@ -82894,8 +82894,8 @@ var __webpack_exports__ = {};
 const TelegramBot = __nccwpck_require__(5633);
 const core = __nccwpck_require__ (7484)
 
-const token = core.getInput("telegram-token")
-const chatID = core.getInput("teelgram-id-user")
+const token = core.getInput("telegram_token")
+const chatID = core.getInput("teelgram_id_user")
 
 const bot = new TelegramBot(token, {polling: true});
 

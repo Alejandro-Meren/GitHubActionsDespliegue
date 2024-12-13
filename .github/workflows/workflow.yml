@@ -115,5 +115,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/send_telegram
         with:
-          telegram-token: ${{secrets.TELEGRAM_TOKEN}}
-          telegram-id-user: ${{secrets.TELEGRAM_ID_USER}}
+          telegram_token: ${{ secrets.TELEGRAM_TOKEN }}
+          telegram_id_user: ${{ secrets.TELEGRAM_ID_USER }}
