@@ -22,10 +22,10 @@ function handler(req, res) {
   function createUser() {
     try {
       usersRepo.create(req.body);
-      const newUserName = req.body.name;
+      let newUserName = req.body.name;
       return res.status(200).json({ greeting: `Hello ${newUserName}` });
     } catch (error) {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error });
     }
   }
 
