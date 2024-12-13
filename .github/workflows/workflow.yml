@@ -31,52 +31,58 @@ jobs:
     needs: linter_job
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Instalar dependencias
-        run: |
-          npm install
-          npm run build
+      - name: Install dependencies
+        run: npm install
 
-      - name: Ejecutar tests de Cypress
-        run: |
-          npx cypress run --record
+      - name: Start server
+        run: npm run dev &
 
-      - name: Subir artefacto con el resultado del test
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3000
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v5
+
+      - name: Save Cypress results
+        run: echo "$(cat cypress/results.txt)" > result.txt
+
+      - name: Upload Cypress results artifact
         uses: actions/upload-artifact@v3
         with:
-          name: result.txt
-          path: ./result.txt
+          name: resultats_test
+          path: result.txt
 
   add_badge_job:
     runs-on: ubuntu-latest
     needs: cypress_job
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Recuperar artefacto
-        uses: actions/download-artifact@v4
+      - name: Retrieve Cypress Test Artifacts
+        uses: actions/download-artifact@v3
         with:
-          name: result.txt
+          name: resultats_test
+          path: ./artifacts
 
-      - name: Settegem l´ixida
+      - name: Generate Output from Cypress Result
+        id: set-output
         run: echo "::set-output name=cypress_outcome::$(cat result.txt)"
-        id: cypress_outcome
 
-      - name: Afegir el badge del resultat del test
-        uses: ./.github/actions/resultat_test_action
+      - name: Add Badge to README
+        uses: ./.github/actions/resultats_test
         with:
-          resultats_test: ${{ steps.cypress_outcome.outputs.cypress_outcome }}
+          cypress_outcome: ${{ steps.set-output.outputs.cypress_outcome }}
 
-      - name: Commit i push dels canvits
+      - name: Commit and Push Changes to README
         uses: EndBug/add-and-commit@v9
         with:
-          add: . 
-          author_name: "Kike Valero"
-          author_email: "kvalerosor@hotmail.com"
-          message: "Resultat test badge"
-          push: true
+          author_name: "Alejandro"
+          author_email: "alemeco2005@gmail.com"
+          message: "Afegir badge de Cypress"
+          add: "README.md"
 
   deploy_job:
     runs-on: ubuntu-latest
