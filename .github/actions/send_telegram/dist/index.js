@@ -25635,10 +25635,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2968:
+/***/ 8102:
 /***/ ((module) => {
 
-module.exports = eval("require")("node-telegram-bot-api");
+module.exports = eval("require")("node-teelgram-bot-api");
 
 
 /***/ }),
@@ -27547,22 +27547,21 @@ module.exports = parseParams
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-const TelegramBot = __nccwpck_require__(2968)
-const core = __nccwpck_require__(7484)
+const TelegramBot = __nccwpck_require__(8102)
+const core = __nccwpck_require__ (7484)
 
 const token = core.getInput("telegram_token")
-const chatID = core.getInput("telegram_id_user")
+const chatID = core.getInput("teelgram_id_user")
 
 const bot = new TelegramBot(token, {polling: true});
 
 try {
+    const message = `WorkFlow ejecutado correctamente tras el ultimo commit. Saludos ${core.getInput("user_name")}`;
 
-    const message = `Workflow ejecutando correctamente tras el ultimo commit. Saludos ${core.getInput("user_name")}`;
     bot.sendMessage(chatID, message)
     core.setOutput("msg", "Mensaje enviado correctamente")
 } catch (error) {
     core.setFailed(error.message)
-    //asd
 }
 module.exports = __webpack_exports__;
 /******/ })()
