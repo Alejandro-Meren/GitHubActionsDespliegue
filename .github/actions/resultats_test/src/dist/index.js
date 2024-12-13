@@ -27566,7 +27566,7 @@ async function main() {
         //Guardem l´insignia del test en cas de que el test resulte exitós.
         const img_exit = 'https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg';
 
-        const badge = resultats_test == 'success' ? img_exit : img_error;
+        var badge = resultats_test == 'success' ? img_exit : img_error;
 
         console.log(resultats_test);
         console.log(badge);
