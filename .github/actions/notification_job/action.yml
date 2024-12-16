@@ -1,0 +1,27 @@
+name: notification-action
+description: "Envia una notificació amb el resultat del workflow"
+inputs:
+  destinatari_email:
+    description: "Adreça de correu del destinatari"
+    required: true
+  nom_repositori_workflow:
+    description: "Nom del workflow executat"
+    required: true
+  resultat_linter:
+    description: "Resultat del job linter"
+    required: true
+  resultat_cypress:
+    description: "Resultat del job cypress"
+    required: true
+  resultat_badge:
+    description: "Resultat del job badge"
+    required: true
+  resultat_deploy:
+    description: "Resultat del job deploy"
+    required: true
+outputs:
+  msg:
+    description: "Missatge de confirmació"
+runs:
+  using: "node20"
+  main: "dist/index.js"
